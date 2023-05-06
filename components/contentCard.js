@@ -12,7 +12,7 @@ import CONTENT_TYPE from '../ressources/lib/contentTypes';
 
 
 
-const ContentCard = ({ contentType, contentID, setContent, toggle }) => {
+const ContentCard = ({ contentType, contentID, setContent, setContentType, toggle }) => {
 
     const apiKey = process.env.API_KEY
     const baseUrl = process.env.BASE_URL
@@ -35,8 +35,9 @@ const ContentCard = ({ contentType, contentID, setContent, toggle }) => {
 
     function setCardContent() {
         setContent(detailedContent)
+        setContentType(contentType)
         toggle()
-        console.log("card pressed")
+        console.log("card pressed: ", detailedContent)
     }
 
     function getInfo () {
@@ -47,7 +48,6 @@ const ContentCard = ({ contentType, contentID, setContent, toggle }) => {
     }
 
 
-    if (contentType === CONTENT_TYPE.movie) {
         return (
             <View style={tw`w-30 h-45  rounded-lg mx-1`}>
                 <Pressable
@@ -73,60 +73,9 @@ const ContentCard = ({ contentType, contentID, setContent, toggle }) => {
             </View>
 
         )
-    }
+    
 
-    else if (contentType === CONTENT_TYPE.tv) {
-        return (
-            <View style={tw`w-30 h-45  rounded-lg mx-1`}>
-                <Pressable
-                    onPress={() => setCardContent()}>
-                    <View style={tw`flex w-full h-full items-center justify-end`}>
-                        <View style={tw`absolute w-full h-full rounded-xl overflow-hidden shadow`} >
-                            <Image style={tw`w-full h-full`}
-                                source={{ uri: `${imgAssets}/w300/${detailedContent?.poster_path}` }}
-                            />
-                        </View>
-
-                        <View style={tw`flex gap-5 w-full h-full rounded-md items-end justify-end`}>
-                            <Pressable
-                                style={tw`rounded-full border-2 border-white w-[8] justify-end items-center m-2`}
-                                onPress={() => getInfo()}>
-                                <Text style={tw`text-white font-semibold text-xl`}>
-                                    +
-                                </Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </Pressable>
-            </View>
-
-        )
-    } else {
-
-        return (
-
-
-
-            <View style={tw`w-30 h-45  rounded-lg mx-1`}>
-                <Pressable
-                    onPress={() => setCardContent()}>
-                    <View style={tw`flex w-full h-full items-center justify-end`}>
-                        <View style={tw`absolute w-full h-full bg-gray-200 rounded-xl overflow-hidden shadow`} >
-                        </View>
-                        <View style={tw`flex gap-5 w-full h-full rounded-md items-end justify-end`}>
-                            <Pressable
-                                style={tw`rounded-full border-2 border-white w-[8] justify-end items-center m-2`}
-                                onPress={() => detailedContent.title ? console.log("card add to list pressed: " + detailedContent.title) : console.log("card add to list pressed for movie: " + detailedContent.name)}>
-                                <Text style={tw`text-white font-semibold text-xl`}>
-                                    +
-                                </Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </Pressable>
-            </View>
-        )
-    }
+    
 
 
 

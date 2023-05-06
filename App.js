@@ -6,23 +6,16 @@
  */
 
 import { React, useState } from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
-
+import { SafeAreaView, ScrollView, Text, View, } from 'react-native';
 import tw from "twrnc"
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-
 import { supabase } from "./ressources/lib/supabase"
 
-import { HomeIcon, RocketLaunchIcon, StarIcon} from 'react-native-heroicons/outline';
+import { HomeIcon, RocketLaunchIcon, StarIcon } from 'react-native-heroicons/outline';
 import { HomeIcon as HomeIconSolid } from 'react-native-heroicons/solid';
 import { StarIcon as StarIconSolid } from 'react-native-heroicons/solid';
 import { RocketLaunchIcon as RocketLaunchIconSolid } from 'react-native-heroicons/outline';
@@ -37,12 +30,9 @@ import Discover from './screens/discover';
 /* -----------------------------------------------------------------------*/
 
 // const supabase = createClient()
-
 const Stack = createNativeStackNavigator();
 const RootStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
-
 
 
 const AuthNavigator = () => {
@@ -58,8 +48,8 @@ const AuthNavigator = () => {
 const TabsNavigator = () => {
   return (
     <Tab.Navigator
-      screenOptions={({route}) => ({
-        tabBarIcon: ({focused}) => {
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused }) => {
           if (route.name === 'Home') {
             return focused ? (
               <HomeIconSolid color={tw.color('blue-600')} size={20} />
@@ -84,7 +74,15 @@ const TabsNavigator = () => {
           marginTop: -10,
           marginBottom: 7,
         },
+        tabBarStyle: {
+          backgroundColor: tw.color(`black`)
+
+        }
+
+
+
       })}
+      
     >
 
       <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
