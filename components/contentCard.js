@@ -27,7 +27,7 @@ const ContentCard = ({ contentType, contentID, setContent, setContentType, toggl
             .then(data => {
                 setDetailedContent(data)
             }).catch(e => {
-                console.error("Hey Jo: ", e)
+                console.error("Error getting contentHero from: ", `${baseUrl}/${contentType}/${contentID}?api_key=${apiKey}&language=en-US`, "error" ,e)
                 return e;
             })
     }, [])

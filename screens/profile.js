@@ -12,36 +12,53 @@ import {
     View,
 } from 'react-native';
 
+import auth from '@react-native-firebase/auth';
+
+
 import NetflixLogo from "../ressources/images/NetflixLogo.svg"
 
 
-function UserSelect({ navigation }) {
+const Profile = ({ navigation }) => {
+
+    const SignUserOut = () => {
+        auth()
+            .signOut()
+            .then(() => console.log('User signed out!'));
+    }
 
     return (
-        <SafeAreaView>
-            <View style={tw`bg-black h-full flex flex-col`}>
+        <SafeAreaView style={tw``} >
 
-                {/* Netflix Logo */}
-                {/* ----------------------------------------------------------- */}
-                <View style={tw`h-30 justify-center`} >
+
+            <View style={tw` h-full flex flex-col bg-black justify-center`} >
+                <View style={tw`absolute w-full top-0 py-8 `} >
                     <NetflixLogo width={"200"} />
                 </View>
-
                 {/* Profile Cards*/}
                 {/* ----------------------------------------------------------- */}
-                <View style={tw` w-full`} >
+                <View style={tw` bg-red-400 flex flex-row flex-wrap `} >
                     {USERS.map((user, index) => (
-                            <Text style="text-white text-xs text-center">
-                               User is:  {user.name}
-                            </Text>
+                        <Text key={index} style="text-white text-xs text-center">
+                            User is:  {user.name}
+                        </Text>
                     ))}
                 </View>
 
                 {/* Add new profile Cards*/}
                 {/* ----------------------------------------------------------- */}
-                <View style={tw` `} >
-
+                <View style={tw`bg-green-400 flex flex-row flex-wrap `} >
+                    <Text style="text-white text-xs text-center">
+                        add new card
+                    </Text>
                 </View>
+
+                {/* Log Out */}
+                {/* ----------------------------------------------------------- */}
+                <Pressable
+                    style={tw`justify-center items-center`}
+                    onPress={() => SignUserOut()}>
+                    <Text style={tw`text-white text-xl`}>Log Out</Text>
+                </Pressable>
             </View>
         </SafeAreaView>
     )
@@ -54,4 +71,4 @@ const USERS = [
     { name: "Add Profile", avatar: "https://api.dicebear.com/6.x/icons/svg?icon=plug", link: "/browse" },
 ]
 
-export default UserSelect
+export default Profile

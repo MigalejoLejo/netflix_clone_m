@@ -1,5 +1,5 @@
 import tw from "twrnc"
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Keyboard,
     KeyboardAvoidingView,
@@ -11,10 +11,157 @@ import {
     View,
 } from 'react-native';
 
+import auth from '@react-native-firebase/auth';
+import { useToast } from "react-native-toast-notifications";
+
 import NetflixLogo from "../ressources/images/NetflixLogo.svg"
 
 
 function SignUp({ navigation }) {
+
+    const toast = useToast();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [secondPassword, setSecondPassword] = useState('')
+    const [passwordMatch, setPasswordMatch] = useState(false);
+
+    const [isValidEmail, setIsValidEmail] = useState(false);
+    const [isValidPassword, setIsValidPassword] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+    useEffect(() => {
+        debounce(emailValidation());
+        console.log('Email: ', email, isValidEmail);
+    }, [email]);
+
+    useEffect(() => {
+        debounce(passwordValidation());
+        console.log('Password: ', password, isValidPassword);
+    }, [password]);
+
+    useEffect(() => {
+        if (password === secondPassword) {
+            setPasswordMatch(true)
+        } else (setPasswordMatch(false))
+
+    }, [secondPassword])
+
+    const emailValidation = () => {
+        const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        if (!email || emailRegex.test(email) === false) {
+            setIsValidEmail(false);
+            return false;
+        }
+        setIsValidEmail(true);
+        return true;
+    };
+
+    const passwordValidation = () => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/i;
+        if (!password || passwordRegex.test(password) === false) {
+            setIsValidPassword(false)
+            return false
+        }
+        setIsValidPassword(true)
+        return true
+    }
+
+
+    const registerUser = () => {
+        console.log("mail is valid?: ", isValidEmail)
+        console.log("password is valid?: ", isValidPassword)
+        console.log("password match?: ", passwordMatch)
+
+        if (isValidEmail && isValidEmail && passwordMatch) {
+            auth()
+                .createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    console.log('User account created & signed in!');
+                    toast.show("WARNING! - EMAIL ALREADY IN USE", {
+                        type: "warning",
+                        placement: "top",
+                        duration: 4000,
+                        offset: 30,
+                        animationType: "slide-in",
+                      });
+                })
+                .catch(error => {
+                    if (error.code === 'auth/email-already-in-use') {
+                        console.log('That email address is already in use!');
+
+                        toast.show("WARNING! - EMAIL ALREADY IN USE", {
+                            type: "warning",
+                            placement: "top",
+                            duration: 4000,
+                            offset: 30,
+                            animationType: "slide-in",
+                          });
+                          return error;
+                    }
+
+                    if (error.code === 'auth/invalid-email') {
+                        console.log('That email address is invalid!');
+                        toast.show("WARNING! - INVALID EMAIL", {
+                            type: "warning",
+                            placement: "top",
+                            duration: 4000,
+                            offset: 30,
+                            animationType: "slide-in",
+                          });
+                          return error;
+                    }
+
+                    console.error(error);
+                });        
+        }
+        if (!passwordMatch){
+            toast.show("WARNING! - PASSWORD DOES NOT MATCH", {
+                type: "warning",
+                placement: "top",
+                duration: 4000,
+                offset: 30,
+                animationType: "slide-in",
+              });
+        }
+        if (!isValidEmail){
+            toast.show("WARNING! - INVALID EMAIL", {
+                type: "warning",
+                placement: "top",
+                duration: 4000,
+                offset: 30,
+                animationType: "slide-in",
+              });
+        }
+        if (!isValidPassword){
+            toast.show("WARNING! - INVALID PASSWORD", {
+                type: "warning",
+                placement: "top",
+                duration: 4000,
+                offset: 30,
+                animationType: "slide-in",
+              });
+        }
+    }
+
+    // Utility FN · Mover a carpeta utils/utils.js
+    const debounce = fn => {
+        let id = null;
+
+        return (...args) => {
+            if (id) {
+                clearTimeout(id);
+            }
+            id = setTimeout(() => {
+                fn(...args);
+                id = null;
+            }, 300);
+        };
+    };
+
+
+
+
 
     return (
         <SafeAreaView>
@@ -39,7 +186,11 @@ function SignUp({ navigation }) {
                                 <TextInput
                                     style={tw`text-white`}
                                     placeholderTextColor={tw.color("text-gray-200/40")}
-                                    placeholder="Email"
+                                    placeholder={"Email"}
+                                    value={email}
+                                    onChangeText={textInput => {
+                                        setEmail(textInput);
+                                    }}
                                     autoCorrect={false}
                                     // autoComplete={"false"}
                                     autoCapitalize={'none'}
@@ -49,7 +200,11 @@ function SignUp({ navigation }) {
                                 <TextInput
                                     style={tw`text-white`}
                                     placeholderTextColor={tw.color("text-gray-200/40")}
-                                    placeholder="Password"
+                                    placeholder={'Password'}
+                                    value={password}
+                                    onChangeText={passwordInput => {
+                                        setPassword(passwordInput)
+                                    }}
                                     autoCorrect={false}
                                     autoComplete={"off"}
                                     autoCapitalize={'none'}
@@ -60,6 +215,10 @@ function SignUp({ navigation }) {
                                     style={tw`text-white`}
                                     placeholderTextColor={tw.color("text-gray-200/40")}
                                     placeholder="Repeat password"
+                                    value={secondPassword}
+                                    onChangeText={secondPassword => {
+                                        setSecondPassword(secondPassword)
+                                    }}
                                     autoCorrect={false}
                                     autoComplete={"off"}
                                     autoCapitalize={'none'}
@@ -74,7 +233,7 @@ function SignUp({ navigation }) {
 
                                 title="Log In"
                                 // TODO:  change this nav -------------------------------- <<<
-                                onPress={() => navigation.navigate('SignUp')}>
+                                onPress={() => registerUser()}>
                                 <Text style={tw`text-white text-2xl`}>Sign up</Text>
                             </Pressable>
 

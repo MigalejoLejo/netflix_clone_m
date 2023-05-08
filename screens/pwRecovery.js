@@ -1,5 +1,5 @@
 import tw from "twrnc"
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Keyboard,
     KeyboardAvoidingView,
@@ -11,10 +11,103 @@ import {
     View,
 } from 'react-native';
 
+import { useToast } from "react-native-toast-notifications";
+import auth from '@react-native-firebase/auth';
+
+
 import NetflixLogo from "../ressources/images/NetflixLogo.svg"
 
 
 function SignIn({ navigation }) {
+    const toast = useToast();
+
+
+    const [email, setEmail] = useState('');
+    const [isValidEmail, setIsValidEmail] = useState(false);
+
+    useEffect(() => {
+        debounce(emailValidation());
+        console.log('Email: ', email, isValidEmail);
+    }, [email]);
+
+    const emailValidation = () => {
+        const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        if (!email || emailRegex.test(email) === false) {
+            setIsValidEmail(false);
+            return false;
+        }
+        setIsValidEmail(true);
+        return true;
+    };
+
+    const PasswordRecovery = () => {
+        if (isValidEmail) {
+            auth()
+                .sendPasswordResetEmail(email)
+                .then(() => {
+                    console.log('Reset email was sent for password recovery');
+                    toast.show("Password reset email was sent", {
+                        type: "info",
+                        placement: "bottom",
+                        duration: 4000,
+                        offset: 30,
+                        animationType: "slide-in",
+                      });
+                      navigation.navigate("SignIn")
+                })
+                .catch(error => {
+                    if (error.code === "auth/user-not-found"){
+                        toast.show("WARNING! - Unknown Email - User not found", {
+                            type: "warning",
+                            placement: "top",
+                            duration: 4000,
+                            offset: 30,
+                            animationType: "slide-in",
+                          });
+                          console.log(error)
+                          return error;
+                    } else {
+                        toast.show("WARNING! - Unknown error", {
+                            type: "warning",
+                            placement: "top",
+                            duration: 4000,
+                            offset: 30,
+                            animationType: "slide-in",
+                          });
+                          console.log(error)
+                          return error;
+                    }
+                       
+                });        
+        }
+        if (!isValidEmail){
+            toast.show("WARNING! - INVALID EMAIL", {
+                type: "warning",
+                placement: "top",
+                duration: 4000,
+                offset: 30,
+                animationType: "slide-in",
+              });
+        }
+
+    }
+
+    
+
+
+    const debounce = fn => {
+        let id = null;
+
+        return (...args) => {
+            if (id) {
+                clearTimeout(id);
+            }
+            id = setTimeout(() => {
+                fn(...args);
+                id = null;
+            }, 300);
+        };
+    };
 
     return (
         <SafeAreaView>
@@ -42,7 +135,11 @@ function SignIn({ navigation }) {
                                 <TextInput
                                     style={tw`text-lg text-black`}
                                     placeholderTextColor={tw.color("text-gray-600/50")}
-                                    placeholder="Email"
+                                    placeholder={"Email"}
+                                    value={email}
+                                    onChangeText={textInput => {
+                                        setEmail(textInput);
+                                    }}
                                     autoCorrect={false}
                                     // autoComplete={"false"}
                                     autoCapitalize={'none'}
@@ -55,7 +152,7 @@ function SignIn({ navigation }) {
                             <Pressable
                                 title="Log In"
                                 // TODO:  change this nav -------------------------------- <<<
-                                onPress={() => navigation.navigate('SignIn')}>
+                                onPress={() => PasswordRecovery()}>
                                 <Text style={tw`text-sky-500 text-xl font-bold mt-8`}>Send me a code</Text>
                             </Pressable>
 

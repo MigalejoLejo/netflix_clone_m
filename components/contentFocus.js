@@ -66,7 +66,7 @@ const ContentFocus = ({ content, contentType, genres, toggle }) => {
                             </Text>
                         </View>
 
-                        <Text style={tw`text-[40px] w-full text-white text-center font-bold`}>
+                        <Text style={tw`text-[40px] w-full h-25 overflow-hidden text-white text-center font-bold`}>
                             {contentType === CONTENT_TYPE.movie
                                 ? content?.title
                                 : content?.name}

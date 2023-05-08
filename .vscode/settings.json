@@ -1,14 +1,13 @@
 {
     "workbench.colorCustomizations": {
-        "editorGroup.border": "#fde118",
         "sash.hoverBorder": "#fde118",
-        "panel.border": "#fde118",
-        "tab.activeBorder": "#fde118",
         "commandCenter.border": "#15202b99",
         "titleBar.activeBackground": "#e0c502",
         "titleBar.activeForeground": "#15202b",
         "titleBar.inactiveBackground": "#e0c50299",
-        "titleBar.inactiveForeground": "#15202b99"
+        "titleBar.inactiveForeground": "#15202b99",
+        "panel.border": "#fde118",
+        "tab.activeBorder": "#fde118"
     },
     "peacock.color": "#e0c502",
     "java.configuration.updateBuildConfiguration": "interactive"

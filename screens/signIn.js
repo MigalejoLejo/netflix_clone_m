@@ -2,27 +2,25 @@ import tw from "twrnc"
 import React from 'react';
 import { useState, useEffect } from "react"
 import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Pressable,
-    SafeAreaView,
-    Text,
-    TextInput,
-    TouchableWithoutFeedback,
-    View,
+    Keyboard, KeyboardAvoidingView, Pressable, SafeAreaView,
+    Text, TextInput, TouchableWithoutFeedback, View
 } from 'react-native';
+
+import auth from '@react-native-firebase/auth';
+import { useToast } from "react-native-toast-notifications";
 
 import NetflixLogo from "../ressources/images/NetflixLogo.svg"
 
 
 function SignIn({ navigation }) {
+    const toast = useToast();
+
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [isValidEmail, setIsValidEmail] = useState(false)
     const [isValidPassword, setIsValidPassword] = useState(false)
 
     const [isPaswordVisible, setIsPaswortVisible] = useState(false)
-
 
     useEffect(() => {
         debounce(emailValidation())
@@ -45,16 +43,39 @@ function SignIn({ navigation }) {
         }
     }
 
-    passwordValidation = () => {
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/i;
-        if (!password || regex.test(password) === false) {
+    const passwordValidation = () => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/i;
+        if (!password || passwordRegex.test(password) === false) {
             setIsValidPassword(false)
             return false
-        } else {
-            setIsValidPassword(true)
-            return true
+        }
+        setIsValidPassword(true)
+        return true
+    }
+
+    const LogInUser = () => {
+        if (isValidEmail && isValidPassword) {
+            auth()
+                .signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    console.log('User signed in!');
+                })
+                .catch(error => {
+                    if (error.code === "auth/user-not-found") {
+                        toast.show("WARNING! - Unknown Email - User not found", {
+                            type: "warning",
+                            placement: "top",
+                            duration: 4000,
+                            offset: 30,
+                            animationType: "slide-in",
+                        });
+                        console.log(error)
+                        return error;
+                    }
+                });
         }
     }
+
 
     const debounce = (fn) => {
         let id = null;
@@ -121,8 +142,8 @@ function SignIn({ navigation }) {
                                     }}
                                     autoCorrect={false}
                                     autoComplete={"off"}
-                                    autoCapitalize={'none'}                                    
-                                    secureTextEntry={!isPaswordVisible}/>
+                                    autoCapitalize={'none'}
+                                    secureTextEntry={!isPaswordVisible} />
                             </View>
 
 
@@ -131,8 +152,7 @@ function SignIn({ navigation }) {
                             <Pressable
                                 style={tw`w-full rounded-md flex justify-center h-[15] mt-4 items-center bg-red-600`}
                                 title="Log In"
-                                // TODO:  change this nav -------------------------------- <<<
-                                onPress={() => navigation.navigate('SignUp')}>
+                                onPress={() => LogInUser()}>
                                 <Text style={tw`text-white text-2xl`}>Log in</Text>
                             </Pressable>
 

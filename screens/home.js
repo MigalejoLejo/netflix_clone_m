@@ -4,6 +4,8 @@ import tw from "twrnc"
 
 import LinearGradient from 'react-native-linear-gradient'
 import { MagnifyingGlassIcon, TvIcon, User, UserIcon } from 'react-native-heroicons/outline';
+import ImageColors from 'react-native-image-colors'
+
 
 import { BASE_URL, API_KEY, IMG_ASSETS } from "@env"
 import CONTENT_TYPE from '../ressources/lib/contentTypes';
@@ -32,6 +34,7 @@ const Home = ({ navigation }) => {
     const [heroContent, setHeroContent] = useState()
     const [heroContentGenres, setHeroContentGenres] = useState([])
     const [heroContentGenresAsText, setHeroContentGenresAsText] = useState()
+    const [heroColor, setHeroColor] = useState()
 
     const [contentType, setContentType] = useState(CONTENT_TYPE.movie)
 
@@ -86,7 +89,7 @@ const Home = ({ navigation }) => {
             .then(data => {
                 setHeroContent(data)
             }).catch(e => {
-                console.error("Hey Jo: ", e)
+                console.error("requesting heroContent from Home: ", e)
                 return e;
             })
     }, [topMovies])
@@ -104,7 +107,7 @@ const Home = ({ navigation }) => {
         setHeroContentGenres(
             heroContent?.genres
         )
-        console.log("genres in array: ",heroContentGenres)
+        console.log("genres in array: ", heroContentGenres)
     }, [heroContent])
 
     useEffect(() => {
@@ -120,6 +123,18 @@ const Home = ({ navigation }) => {
         }
 
     }, [heroContentGenres])
+
+    useEffect(() => {
+        uri = `${IMG_ASSETS}/original${heroContent?.poster_path}`
+        ImageColors.getColors(uri, {
+            fallback: '#228B22',
+            cache: true,
+            key: 'unique_key',
+        }).then(res =>
+            setHeroColor(res.dominant)
+        ).catch((e) => console.log("uri: ", uri, "error: ", e))
+
+    }, [heroContent])
 
     function toggleModal() {
         setDisplayModal(!displayModal)
@@ -144,11 +159,22 @@ const Home = ({ navigation }) => {
                     <N_logo width={20} />
                     <Text style={tw`text-white text-xl `}>For {user}</Text>
                 </View>
+
                 <View style={tw`flex flex-row gap-4`}>
-                    <MagnifyingGlassIcon color={tw.color(`white`)} size={30} />
-                    <TvIcon color={tw.color(`white`)} size={30} />
-                    <UserIcon color={tw.color(`white`)} size={30} />
+                    <Pressable>
+                        <MagnifyingGlassIcon color={tw.color(`white`)} size={30} />
+                    </Pressable>
+
+                    <Pressable>
+                        <TvIcon color={tw.color(`white`)} size={30} />
+                    </Pressable>
+
+                    <Pressable
+                    onPress={()=> navigation.navigate("Profile")}>
+                        <UserIcon color={tw.color(`white`)} size={30} />
+                    </Pressable>
                 </View>
+
             </View>
 
             {/* BODY */}
@@ -156,7 +182,7 @@ const Home = ({ navigation }) => {
                 <View style={tw`bg-zinc-900 h-full flex flex-col `}>
 
                     {/* Background Gradient */}
-                    <LinearGradient colors={[tw.color(`blue-500`), tw.color(`black`)]} style={tw`w-full h-[200] absolute `} >
+                    <LinearGradient colors={[tw.color(`gray-500`), tw.color(`black`)]} style={tw`w-full h-[200] absolute `} >
                     </LinearGradient>
 
                     {/* Spacer to top */}
@@ -193,7 +219,7 @@ const Home = ({ navigation }) => {
                     {/* ========================================================================== */}
                     <View
                         style={tw`w-full h-[120] mt-3 px-3`} >
-                        <ContentFocus content={heroContent} contentType={contentType} genres={heroContentGenresAsText}  toggle={toggleModal} />
+                        <ContentFocus content={heroContent} contentType={contentType} genres={heroContentGenresAsText} toggle={toggleModal} />
                     </View>
                     {/* ------------------------------------------------------------------------------------------------- */}
 
