@@ -1,22 +1,21 @@
+// Imports ---------------------------------------------------------------//
 import tw from "twrnc"
 import React, { useEffect, useState } from 'react';
 import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Pressable,
-    SafeAreaView,
-    Text,
-    TextInput,
-    TouchableWithoutFeedback,
-    View,
+    Keyboard, KeyboardAvoidingView, Pressable, SafeAreaView, Text,
+    TextInput, TouchableWithoutFeedback, View,
 } from 'react-native';
 
 import auth from '@react-native-firebase/auth';
 import { useToast } from "react-native-toast-notifications";
 
 import NetflixLogo from "../ressources/images/NetflixLogo.svg"
+//------------------------------------------------------------------------//
 
 
+
+// COMPONENT 
+// =========================================================================
 function SignUp({ navigation }) {
 
     const toast = useToast();
@@ -32,12 +31,12 @@ function SignUp({ navigation }) {
 
     useEffect(() => {
         debounce(emailValidation());
-        console.log('Email: ', email, isValidEmail);
+        // console.log('Email: ', email, isValidEmail);
     }, [email]);
 
     useEffect(() => {
         debounce(passwordValidation());
-        console.log('Password: ', password, isValidPassword);
+        // console.log('Password: ', password, isValidPassword);
     }, [password]);
 
     useEffect(() => {
@@ -67,39 +66,27 @@ function SignUp({ navigation }) {
         return true
     }
 
-
     const registerUser = () => {
         console.log("mail is valid?: ", isValidEmail)
         console.log("password is valid?: ", isValidPassword)
         console.log("password match?: ", passwordMatch)
 
-        if (isValidEmail && isValidEmail && passwordMatch) {
+        if (isValidEmail && isValidPassword && passwordMatch) {
             auth()
                 .createUserWithEmailAndPassword(email, password)
-                .then(() => {
-                    console.log('User account created & signed in!');
-                    toast.show("WARNING! - EMAIL ALREADY IN USE", {
-                        type: "warning",
-                        placement: "top",
-                        duration: 4000,
-                        offset: 30,
-                        animationType: "slide-in",
-                      });
-                })
+                .then(() => { console.log('User account created & signed in!') })
                 .catch(error => {
                     if (error.code === 'auth/email-already-in-use') {
                         console.log('That email address is already in use!');
-
                         toast.show("WARNING! - EMAIL ALREADY IN USE", {
                             type: "warning",
                             placement: "top",
                             duration: 4000,
                             offset: 30,
                             animationType: "slide-in",
-                          });
-                          return error;
+                        });
+                        return error;
                     }
-
                     if (error.code === 'auth/invalid-email') {
                         console.log('That email address is invalid!');
                         toast.show("WARNING! - INVALID EMAIL", {
@@ -108,39 +95,38 @@ function SignUp({ navigation }) {
                             duration: 4000,
                             offset: 30,
                             animationType: "slide-in",
-                          });
-                          return error;
+                        });
+                        return error;
                     }
-
                     console.error(error);
-                });        
+                });
         }
-        if (!passwordMatch){
+        if (!passwordMatch) {
             toast.show("WARNING! - PASSWORD DOES NOT MATCH", {
                 type: "warning",
                 placement: "top",
                 duration: 4000,
                 offset: 30,
                 animationType: "slide-in",
-              });
+            });
         }
-        if (!isValidEmail){
+        if (!isValidEmail) {
             toast.show("WARNING! - INVALID EMAIL", {
                 type: "warning",
                 placement: "top",
                 duration: 4000,
                 offset: 30,
                 animationType: "slide-in",
-              });
+            });
         }
-        if (!isValidPassword){
+        if (!isValidPassword) {
             toast.show("WARNING! - INVALID PASSWORD", {
                 type: "warning",
                 placement: "top",
                 duration: 4000,
                 offset: 30,
                 animationType: "slide-in",
-              });
+            });
         }
     }
 
@@ -161,8 +147,8 @@ function SignUp({ navigation }) {
 
 
 
-
-
+    // RETURN
+    // =========================================================================
     return (
         <SafeAreaView>
             <TouchableWithoutFeedback

@@ -1,33 +1,31 @@
+
+// Imports ---------------------------------------------------------------//
 import tw from "twrnc"
 import React, { useEffect, useState } from 'react';
 import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Pressable,
-    SafeAreaView,
-    Text,
-    TextInput,
-    TouchableWithoutFeedback,
-    View,
+    Keyboard, KeyboardAvoidingView, Pressable, SafeAreaView,
+    Text, TextInput, TouchableWithoutFeedback, View,
 } from 'react-native';
 
 import { useToast } from "react-native-toast-notifications";
 import auth from '@react-native-firebase/auth';
 
-
 import NetflixLogo from "../ressources/images/NetflixLogo.svg"
+//------------------------------------------------------------------------//
 
 
+
+// COMPONENT 
+// =========================================================================
 function SignIn({ navigation }) {
     const toast = useToast();
-
 
     const [email, setEmail] = useState('');
     const [isValidEmail, setIsValidEmail] = useState(false);
 
     useEffect(() => {
         debounce(emailValidation());
-        console.log('Email: ', email, isValidEmail);
+        // console.log('Email: ', email, isValidEmail);
     }, [email]);
 
     const emailValidation = () => {
@@ -52,20 +50,20 @@ function SignIn({ navigation }) {
                         duration: 4000,
                         offset: 30,
                         animationType: "slide-in",
-                      });
-                      navigation.navigate("SignIn")
+                    });
+                    navigation.navigate("SignIn")
                 })
                 .catch(error => {
-                    if (error.code === "auth/user-not-found"){
+                    if (error.code === "auth/user-not-found") {
                         toast.show("WARNING! - Unknown Email - User not found", {
                             type: "warning",
                             placement: "top",
                             duration: 4000,
                             offset: 30,
                             animationType: "slide-in",
-                          });
-                          console.log(error)
-                          return error;
+                        });
+                        console.log(error)
+                        return error;
                     } else {
                         toast.show("WARNING! - Unknown error", {
                             type: "warning",
@@ -73,27 +71,22 @@ function SignIn({ navigation }) {
                             duration: 4000,
                             offset: 30,
                             animationType: "slide-in",
-                          });
-                          console.log(error)
-                          return error;
+                        });
+                        console.log(error)
+                        return error;
                     }
-                       
-                });        
+                });
         }
-        if (!isValidEmail){
+        if (!isValidEmail) {
             toast.show("WARNING! - INVALID EMAIL", {
                 type: "warning",
                 placement: "top",
                 duration: 4000,
                 offset: 30,
                 animationType: "slide-in",
-              });
+            });
         }
-
     }
-
-    
-
 
     const debounce = fn => {
         let id = null;
@@ -109,6 +102,10 @@ function SignIn({ navigation }) {
         };
     };
 
+    
+    
+    // RETURN
+    // =========================================================================
     return (
         <SafeAreaView>
             <TouchableWithoutFeedback

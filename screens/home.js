@@ -34,7 +34,8 @@ const Home = ({ navigation }) => {
     const [heroContent, setHeroContent] = useState()
     const [heroContentGenres, setHeroContentGenres] = useState([])
     const [heroContentGenresAsText, setHeroContentGenresAsText] = useState()
-    const [heroColor, setHeroColor] = useState()
+    
+    const [heroColor, setHeroColor] = useState(`${tw.color("gray-500")}`)
 
     const [contentType, setContentType] = useState(CONTENT_TYPE.movie)
 
@@ -125,15 +126,18 @@ const Home = ({ navigation }) => {
     }, [heroContentGenres])
 
     useEffect(() => {
-        uri = `${IMG_ASSETS}/original${heroContent?.poster_path}`
-        ImageColors.getColors(uri, {
+        // console.log(`${IMG_ASSETS}/original${heroContent?.backdrop_path}`)
+        ImageColors.getColors(`${IMG_ASSETS}/original${heroContent?.backdrop_path}`, {
             fallback: '#228B22',
-            cache: true,
+            cache: false,
             key: 'unique_key',
-        }).then(res =>
-            setHeroColor(res.dominant)
+        }).then(res => (
+            setHeroColor(res.vibrant)
+            // console.log("resulting color: ",res),
+            // console.log("heroColor",heroColor)
+        )
+           
         ).catch((e) => console.log("uri: ", uri, "error: ", e))
-
     }, [heroContent])
 
     function toggleModal() {
@@ -182,7 +186,7 @@ const Home = ({ navigation }) => {
                 <View style={tw`bg-zinc-900 h-full flex flex-col `}>
 
                     {/* Background Gradient */}
-                    <LinearGradient colors={[tw.color(`gray-500`), tw.color(`black`)]} style={tw`w-full h-[200] absolute `} >
+                    <LinearGradient colors={[`${heroColor}`, tw.color(`black`)]} style={tw`w-full h-[200] absolute `} >
                     </LinearGradient>
 
                     {/* Spacer to top */}

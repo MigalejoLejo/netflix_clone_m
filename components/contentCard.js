@@ -37,7 +37,8 @@ const ContentCard = ({ contentType, contentID, setContent, setContentType, toggl
         setContent(detailedContent)
         setContentType(contentType)
         toggle()
-        console.log("card pressed: ", detailedContent)
+
+        console.log("card pressed: " , contentType === CONTENT_TYPE.movie?  detailedContent?.title : detailedContent?.name)
     }
 
     function getInfo () {

@@ -1,3 +1,4 @@
+// Imports ---------------------------------------------------------------//
 import tw from "twrnc"
 import React from 'react';
 import { useState, useEffect } from "react"
@@ -10,8 +11,12 @@ import auth from '@react-native-firebase/auth';
 import { useToast } from "react-native-toast-notifications";
 
 import NetflixLogo from "../ressources/images/NetflixLogo.svg"
+//------------------------------------------------------------------------//
 
 
+
+// COMPONENT 
+// =========================================================================
 function SignIn({ navigation }) {
     const toast = useToast();
 
@@ -24,12 +29,12 @@ function SignIn({ navigation }) {
 
     useEffect(() => {
         debounce(emailValidation())
-        console.log("email: ", email, isValidEmail)
+        // console.log("email: ", email, isValidEmail)
     }, [email])
 
     useEffect(() => {
         debounce(passwordValidation())
-        console.log("password: ", password, isValidPassword)
+        // console.log("password: ", password, isValidPassword)
     }, [password])
 
     emailValidation = () => {
@@ -76,7 +81,6 @@ function SignIn({ navigation }) {
         }
     }
 
-
     const debounce = (fn) => {
         let id = null;
 
@@ -92,6 +96,9 @@ function SignIn({ navigation }) {
     };
 
 
+
+    // RETURN 
+    // =========================================================================
     return (
         <SafeAreaView>
             <TouchableWithoutFeedback
