@@ -1,14 +1,21 @@
 {
     "workbench.colorCustomizations": {
-        "sash.hoverBorder": "#fde118",
-        "commandCenter.border": "#15202b99",
-        "titleBar.activeBackground": "#e0c502",
-        "titleBar.activeForeground": "#15202b",
-        "titleBar.inactiveBackground": "#e0c50299",
-        "titleBar.inactiveForeground": "#15202b99",
-        "panel.border": "#fde118",
-        "tab.activeBorder": "#fde118"
+        "sash.hoverBorder": "#9d2109",
+        "commandCenter.border": "#e7e7e799",
+        "titleBar.activeBackground": "#6d1706",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#6d170699",
+        "titleBar.inactiveForeground": "#e7e7e799",
+        "panel.border": "#9d2109",
+        "tab.activeBorder": "#9d2109",
+        "statusBar.background": "#6d1706",
+        "statusBar.border": "#6d1706",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#9d2109",
+        "statusBarItem.remoteBackground": "#6d1706",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.border": "#6d1706"
     },
-    "peacock.color": "#e0c502",
+    "peacock.color": "#6d1706",
     "java.configuration.updateBuildConfiguration": "interactive"
 }
